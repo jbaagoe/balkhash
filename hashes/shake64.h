@@ -8,8 +8,8 @@
  * that the above copyright notice and this permission notice appear
  * in all copies.
  *
- * THE SOFTWARE IS PROVIDED "AS IS" and Johannes Baagøe disclaims all
- * warranties with regard to this software including all implied
+ * THE SOFTWARE IS PROVIDED "AS IS" and Johannes Baagøe DISCLAIMS ALL
+ * WARRANTIES with regard to this software including all implied
  * warranties of merchantability and fitness. In no event shall
  * Johannes Baagøe be liable for any special, direct, indirect, or
  * consequential damages or any damages whatsoever resulting from

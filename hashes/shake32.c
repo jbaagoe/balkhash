@@ -8,8 +8,8 @@
  * that the above copyright notice and this permission notice appear
  * in all copies.
  *
- * THE SOFTWARE IS PROVIDED "AS IS" and Johannes Baagøe disclaims all
- * warranties with regard to this software including all implied
+ * THE SOFTWARE IS PROVIDED "AS IS" and Johannes Baagøe DISCLAIMS ALL
+ * WARRANTIES with regard to this software including all implied
  * warranties of merchantability and fitness. In no event shall
  * Johannes Baagøe be liable for any special, direct, indirect, or
  * consequential damages or any damages whatsoever resulting from
@@ -21,7 +21,7 @@
 #include "shake32.h"
 
 #ifdef NO_RISK_OF_HASHDOS
-#define HASHDOS_GUARD (0)
+#define HASHDOS_GUARD 0
 #else
 #define HASHDOS_GUARD seed
 #endif
@@ -37,7 +37,7 @@ static inline uint32_t combine32(
   uint32_t n,
   uint32_t k
 ) {
-  n += k * 0x6ff9766f;
+  n += k * 0x6ff9766f; // 37 * 83 * 611729
   n = rotl32(n, 14);
   n = n * 0x525bd4ab;
   return n;
@@ -75,7 +75,7 @@ uint32_t shake32(
   const int words_per_block = 4;
   const int bytes_per_block = bytes_per_word * words_per_block;
 
-  uint32_t s0 = 0x243f6a88 +  seed - HASHDOS_GUARD;
+  uint32_t s0 = 0x243f6a88 ^  seed ^ HASHDOS_GUARD;
   uint32_t s1 = 0x85a308d3;
   uint32_t s2 = 0x13198a2e;
   uint32_t s3 = 0x03707344;
@@ -87,10 +87,10 @@ uint32_t shake32(
   const uint32_t *words_limit = data + len / bytes_per_word;
 
   while (data < blocks_limit) {
-    s0 = combine32(s0 + HASHDOS_GUARD, *data++);
-    s1 = combine32(s1 + HASHDOS_GUARD, *data++);
-    s2 = combine32(s2 + HASHDOS_GUARD, *data++);
-    s3 = combine32(s3 + HASHDOS_GUARD, *data++);
+    s0 = combine32(s0 ^ HASHDOS_GUARD, *data++);
+    s1 = combine32(s1 ^ HASHDOS_GUARD, *data++);
+    s2 = combine32(s2 ^ HASHDOS_GUARD, *data++);
+    s3 = combine32(s3 ^ HASHDOS_GUARD, *data++);
   }
 
   s0 = combine32(s0, len);

@@ -8,8 +8,8 @@
  * that the above copyright notice and this permission notice appear
  * in all copies.
  *
- * THE SOFTWARE IS PROVIDED "AS IS" and Johannes Baagøe disclaims all
- * warranties with regard to this software including all implied
+ * THE SOFTWARE IS PROVIDED "AS IS" and Johannes Baagøe DISCLAIMS ALL
+ * WARRANTIES with regard to this software including all implied
  * warranties of merchantability and fitness. In no event shall
  * Johannes Baagøe be liable for any special, direct, indirect, or
  * consequential damages or any damages whatsoever resulting from
@@ -21,7 +21,7 @@
 #include "shake64.h"
 
 #ifdef NO_RISK_OF_HASHDOS
-#define HASHDOS_GUARD (0)
+#define HASHDOS_GUARD 0
 #else
 #define HASHDOS_GUARD seed
 #endif
@@ -77,7 +77,7 @@ uint64_t shake64(
   const int bytes_per_word = sizeof (uint64_t);
   const int bytes_per_block = bytes_per_word * words_per_block;
 
-  uint64_t s0 = 0x243f6a8885a308d3ULL + seed - HASHDOS_GUARD;
+  uint64_t s0 = 0x243f6a8885a308d3ULL ^ seed ^ HASHDOS_GUARD;
   uint64_t s1 = 0x13198a2e03707344ULL;
   uint64_t s2 = 0xa4093822299f31d0ULL;
   uint64_t s3 = 0x082efa98ec4e6c89ULL;
@@ -97,18 +97,18 @@ uint64_t shake64(
   const uint64_t *words_limit = data + len / bytes_per_word;
 
   while (data < blocks_limit) {
-    s0 += *data++; s2 ^= s1; s3 = rotl64(s3, 17); s4 ^= s7; s5 += s6; s8 ^= HASHDOS_GUARD;
-    s1 += *data++; s3 ^= s2; s4 = rotl64(s4, 17); s5 ^= s8; s6 += s7; s9 ^= HASHDOS_GUARD;
-    s2 += *data++; s4 ^= s3; s5 = rotl64(s5, 17); s6 ^= s9; s7 += s8; sa ^= HASHDOS_GUARD;
-    s3 += *data++; s5 ^= s4; s6 = rotl64(s6, 17); s7 ^= sa; s8 += s9; sb ^= HASHDOS_GUARD;
-    s4 += *data++; s6 ^= s5; s7 = rotl64(s7, 17); s8 ^= sb; s9 += sa; s0 ^= HASHDOS_GUARD;
-    s5 += *data++; s7 ^= s6; s8 = rotl64(s8, 17); s9 ^= s0; sa += sb; s1 ^= HASHDOS_GUARD;
-    s6 += *data++; s8 ^= s7; s9 = rotl64(s9, 17); sa ^= s1; sb += s0; s2 ^= HASHDOS_GUARD;
-    s7 += *data++; s9 ^= s8; sa = rotl64(sa, 17); sb ^= s2; s0 += s1; s3 ^= HASHDOS_GUARD;
-    s8 += *data++; sa ^= s9; sb = rotl64(sb, 17); s0 ^= s3; s1 += s2; s4 ^= HASHDOS_GUARD;
-    s9 += *data++; sb ^= sa; s0 = rotl64(s0, 17); s1 ^= s4; s2 += s3; s5 ^= HASHDOS_GUARD;
-    sa += *data++; s0 ^= sb; s1 = rotl64(s1, 17); s2 ^= s5; s3 += s4; s6 ^= HASHDOS_GUARD;
-    sb += *data++; s1 ^= s0; s2 = rotl64(s2, 17); s3 ^= s6; s4 += s5; s7 ^= HASHDOS_GUARD;
+    s0 += *data++; s2 ^= s1; s3 = rotl64(s3, 17); s4 ^= s7; s5 += s6;
+    s1 += *data++; s3 ^= s2; s4 = rotl64(s4, 17); s5 ^= s8; s6 += s7;
+    s2 += *data++; s4 ^= s3; s5 = rotl64(s5, 17); s6 ^= s9; s7 += s8;
+    s3 += *data++; s5 ^= s4; s6 = rotl64(s6, 17); s7 ^= sa; s8 += s9;
+    s4 += *data++; s6 ^= s5; s7 = rotl64(s7, 17); s8 ^= sb; s9 += sa;
+    s5 += *data++; s7 ^= s6; s8 = rotl64(s8, 17); s9 ^= s0; sa += sb;
+    s6 += *data++; s8 ^= s7; s9 = rotl64(s9, 17); sa ^= s1; sb += s0;
+    s7 += *data++; s9 ^= s8; sa = rotl64(sa, 17); sb ^= s2; s0 += s1;
+    s8 += *data++; sa ^= s9; sb = rotl64(sb, 17); s0 ^= s3; s1 += s2;
+    s9 += *data++; sb ^= sa; s0 = rotl64(s0, 17); s1 ^= s4; s2 += s3;
+    sa += *data++; s0 ^= sb; s1 = rotl64(s1, 17); s2 ^= s5; s3 += s4;
+    sb += *data++; s1 ^= s0; s2 = rotl64(s2, 17); s3 ^= s6; s4 += s5;
   }
 
   s0 = mix64(s0, HASHDOS_GUARD + len);
